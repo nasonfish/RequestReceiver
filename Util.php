@@ -48,45 +48,37 @@ function getDB(){
 
 function requestsByMod_amt($ts){
     $db = getDB();
-    $stmnt = $db->prepare('SELECT SUM(1), modname FROM requests WHERE timestamp > :ts GROUP BY modname;');
-    $stmnt->bindValue(':ts', $ts);
-    $res = $stmnt->execute();
-    $stmnt->close();
+    $query = sprintf('SELECT SUM(1) as amt, modname FROM requests WHERE timestamp > Datetime( \'%s\' ) GROUP BY modname', $ts);
+    $res = $db->query($query);
     return makeArray($res);
 }
 
 function requestsByUser_amt($ts){
     $db = getDB();
-    $stmnt = $db->prepare('SELECT SUM(1), username FROM requests WHERE timestamp > :ts GROUP BY username;');
-    $stmnt->bindValue(':ts', $ts);
-    $res = $stmnt->execute();
-    $stmnt->close();
+    $query = sprintf('SELECT SUM(1) as amt, username FROM requests WHERE timestamp > Datetime( \'%s\') GROUP BY username', $ts);
+    $res = $db->query($query);
     return makeArray($res);
 }
 
 function requestsByMod_ids($ts, $mod){
     $db = getDB();
-    $stmnt = $db->prepare('SELECT id FROM requests WHERE timestamp > :ts AND modname = :mod;');
-    $stmnt->bindValue(':ts', $ts);
-    $stmnt->bindValue(':mod', $mod);
-    $res = $stmnt->execute();
-    $stmnt->close();
+    $mod = preg_replace('/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]/', '', $mod);
+    $query = sprintf('SELECT rowid FROM requests WHERE timestamp > Datetime(\'%s\') AND modname = \'%s\'', $ts, $mod);
+    $res = $db->query($query);
     return makeArray($res);
 }
 
 function requestsByUser_ids($ts, $user){
     $db = getDB();
-    $stmnt = $db->prepare('SELECT id FROM requests WHERE timestamp > :ts AND username = :user;');
-    $stmnt->bindValue(':ts', $ts);
-    $stmnt->bindValue(':user', $user);
-    $res = $stmnt->execute();
-    $stmnt->close();
+    $user = preg_replace('/[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]/', '', $user);
+    $query = sprintf('SELECT rowid FROM requests WHERE timestamp > Datetime(\'%s\') AND username = \'%s\'', $ts, $user);
+    $res = $db->query($query);
     return makeArray($res);
 }
 
 function requestById($id){
     $db = getDB();
-    $stmnt = $db->prepare('SELECT * from requests WHERE id = :id;');
+    $stmnt = $db->prepare('SELECT * from requests WHERE rowid = :id;');
     $stmnt->bindValue(':id', $id);
     $res = $stmnt->execute();
     $stmnt->close();
@@ -116,10 +108,35 @@ function makeArraySingle($result){
 ////////////////////////////////
 ////// PRINTING FUNCTIONS //////
 ////////////////////////////////
-function print_requests($array){
 
+function print_user_requests($array){
+    print '<ul>';
+    foreach($array as $row){
+        print sprintf('<li class="user"><span class="user_name">%s</span> &rarr; <span class="user_amount">%s</span></li>', $row['username'], $row['amt']);
+    }
+    print '</ul>';
+}
+
+function print_mod_requests($array){
+    print '<ul>';
+    foreach($array as $row){
+        print sprintf('<li class="mod"><span class="mod_name">%s</span> &rarr; <span class="mod_amount">%s</span></li>', $row['modname'], $row['amt']);
+    }
+    print '</ul>';
+}
+
+function print_request_ids($array){
+    print '<ul>';
+    foreach($array as $row){
+        print sprintf('<li class="id"><span class="req_id">%s</span></li>', $row['rowid']);
+    }
+    print '</ul>';
 }
 
 function print_request_single($array){
-
+    print '<ul>';
+    foreach($array as $key => $val){
+        print sprintf('<li><span class="key">&s</span> &rarr; <span class="val">&s</span></li>', $key, $val);
+    }
+    print '</ul>';
 }

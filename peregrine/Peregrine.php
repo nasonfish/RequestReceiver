@@ -407,7 +407,7 @@ class CageBase {
 	 * @param array $allowed
 	 * @return boolean
 	 */
-	public function isInArray($key, $seek_val = NULL){
+	public function isInArray_old($key, $seek_val = NULL){
 		// @todo: make this work recursively
 		$check_array = $this->getArray($key);
 		if(is_array($check_array)){
@@ -415,6 +415,21 @@ class CageBase {
 		}
 		return NULL;
 	}
+
+    /**
+     * Returns if the key is in a provided array. (MODIFIED)
+     *
+     * @param string $key
+     * @param array $allowed
+     * @return boolean
+     */
+    public function isInArray($key, $check_array){
+        // @todo: make this work recursively
+        if(is_array($check_array)){
+            return in_array($this->getRaw($key), $check_array);
+        }
+        return NULL;
+    }
 
 
 	/**
