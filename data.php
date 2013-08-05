@@ -1,8 +1,25 @@
+<?php
+
+if (!isset($_SERVER['PHP_AUTH_USER'])) {
+    header("WWW-Authenticate: Basic realm=\"DarkHelmet Minecraft MODREQ stats\"");
+    header("HTTP/1.0 401 Unauthorized");
+    echo '401 Unauthorized - No username/password supplied. Sorry.';
+    exit;
+} else {
+    if(strtoupper($_SERVER['PHP_AUTH_USER']) != "DHMC_STAFF" || $_SERVER['PHP_AUTH_PW'] != file_get_contents('authpass.txt')){
+        header("WWW-Authenticate: Basic realm=\"DarkHelmet Minecraft MODREQ stats\"");
+        header("HTTP/1.0 401 Unauthorized");
+        echo "401 Unauthorized - Incorrect username/password. Sorry.";
+        exit;
+    }
+}
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>DHMC Modreq stats</title>
     <?php include('Util.php'); ?>
+    <link rel="stylesheet" href="data.css" type="text/css"/>
 </head>
     <body>
         <div class="mods_box">
@@ -16,51 +33,5 @@
     </body>
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
-
-<script>
-    $('.mods_box').on('click', '.mod', function(){
-        handle($(this), 'mod');
-    });
-    $('.users_box').on('click', '.user', function(){
-        handle($(this), 'user');
-    });
-
-    function handle(elem, type){
-        var name = elem.find('.'+type+'_name').text();
-        $.ajax('data_ajax.php',
-            {
-                type: 'POST',
-                data: {
-                    name: name,
-                    type: type
-                    //date: 'Some kind of date.'
-                },
-                dataType: 'html'
-            }
-        ).done(function(data){
-                elem.after(data).slideDown();
-                elem.removeClass();
-            });
-    }
-
-    $('.users_box, .mods_box').on('click', '.req_id', function(){
-        var type = "id";
-        var id = $(this).text();
-        var elem = $(this);
-        $.ajax('data_ajax.php',
-            {
-                type: 'POST',
-                data: {
-                    id: id,
-                    type: type
-                    //date: 'Some kind of date.'
-                },
-                dataType: 'html'
-            }
-        ).done(function(data){
-                elem.after(data).slideDown();
-                elem.removeClass();
-            });
-    });
-</script>
+<script src="data.js"></script>
 </html>

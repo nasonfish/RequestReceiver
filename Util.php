@@ -103,7 +103,7 @@ function makeArraySingle($result){
 function print_user_requests($array){
     print '<ul>';
     foreach($array as $row){
-        print sprintf('<li class="user"><span class="user_name">%s</span> &rarr; <span class="user_amount">%s</span></li>', $row['username'], $row['amt']);
+        print sprintf('<li class="user user_li"><a><span class="user_name">%s</span></a> &rarr; <span class="user_amount">%s</span></li>', $row['username'], $row['amt']);
     }
     print '</ul>';
 }
@@ -111,7 +111,7 @@ function print_user_requests($array){
 function print_mod_requests($array){
     print '<ul>';
     foreach($array as $row){
-        print sprintf('<li class="mod"><span class="mod_name">%s</span> &rarr; <span class="mod_amount">%s</span></li>', $row['modname'], $row['amt']);
+        print sprintf('<li class="mod mod_li"><a><span class="mod_name">%s</span></a> &rarr; <span class="mod_amount">%s</span></li>', $row['modname'], $row['amt']);
     }
     print '</ul>';
 }
@@ -119,13 +119,13 @@ function print_mod_requests($array){
 function print_request_ids($array){
     print '<ul>';
     foreach($array as $row){
-        print sprintf('<li class="id"><span class="req_id">%s</span></li>', $row['rowid']);
+        print sprintf('<li class="req_id id_li"><a><span class="id">%s</span></a></li>', $row['rowid']);
     }
     print '</ul>';
 }
 
 function print_request_single($array){
-    print '<ul>';
+    print '<ul class="req_stats">';
     foreach($array as $key => $val){
         print sprintf('<li><span class="key">%s</span> &rarr; <span class="val">%s</span></li>', $key, $val);
     }

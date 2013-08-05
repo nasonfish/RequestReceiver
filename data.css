@@ -1,0 +1,48 @@
+/*
+<div class="mods_box">
+    <h2>Mods</h2>
+    <ul>
+        <li class="mod_li">
+            <span class="mod_name">modname</span>
+            <span class="mod_amount">1</span>
+        </li>
+        <ul>
+            <li class="id_li"><span class="id">1</span></li>
+            <ul class="req_stats">
+                <li>
+                    <span class="key">request_id</span> &rarr; <span class="val">1</span>
+                <li>
+            </ul>
+        </ul>
+    </ul>
+</div>
+*/
+
+li, span{
+    border-radius: 4px;
+    padding: 2px;
+    font-size: 18px;
+}
+span.mod_name, span.user_name, span.id{
+    padding: 3px;
+}
+
+/* This stuff if only there if the link hasn't been clicked. :-) */
+.mod:hover span.mod_name:hover, .user:hover span.user_name:hover, .req_id:hover span.id:hover{
+    background-color: #fdff6e;
+    color: #000d78;
+}
+
+.mod:active span.mod_name:active, .user:active span.user_name:active, .req_id:active span.id:active{
+    background-color: #cdcf57;
+    color: #0013b5;
+}
+
+body{
+    background-color: #f2f2f2;
+}
+
+body div{
+    padding-left: 30px;
+    padding-top: 10px;
+}
