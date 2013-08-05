@@ -20,14 +20,8 @@ QUIT :Farewell!' | /home/sites/netcat nasonfish.com 8080");
 }
 
 function save_request($request, $username, $modname, $text){
-    $db = getDB();
-    $stmnt = $db->prepare('INSERT INTO requests (request_id, username, modname, text) VALUES (:request,:username,:modname,:text)');
-    $stmnt->bindValue(':request', $request);
-    $stmnt->bindValue(':username', $username);
-    $stmnt->bindValue(':modname', $modname);
-    $stmnt->bindValue(':text', $text);
-    $stmnt->execute();
-    $stmnt->close();
+    getDB()->query(sprintf('INSERT INTO requests (request_id, username, modname, text) VALUES (\'%s\', \'%s\', \'%s\', \'%s\');', $request, $username, $modname, $text));
+   // print(sprintf('INSERT INTO requests (request_id, username, modname, text) VALUES (\'%s\', \'%s\', \'%s\', \'%s\')', $request, $username, $modname, $text));
 }
 
 /////////////////////////////////
@@ -48,14 +42,14 @@ function getDB(){
 
 function requestsByMod_amt($ts){
     $db = getDB();
-    $query = sprintf('SELECT SUM(1) as amt, modname FROM requests WHERE timestamp > Datetime( \'%s\' ) GROUP BY modname', $ts);
+    $query = sprintf('SELECT SUM(1) as amt, modname FROM requests WHERE timestamp > Datetime( \'%s\' ) GROUP BY modname ORDER BY amt DESC', $ts);
     $res = $db->query($query);
     return makeArray($res);
 }
 
 function requestsByUser_amt($ts){
     $db = getDB();
-    $query = sprintf('SELECT SUM(1) as amt, username FROM requests WHERE timestamp > Datetime( \'%s\') GROUP BY username', $ts);
+    $query = sprintf('SELECT SUM(1) as amt, username FROM requests WHERE timestamp > Datetime( \'%s\') GROUP BY username ORDER BY amt DESC', $ts);
     $res = $db->query($query);
     return makeArray($res);
 }
@@ -78,10 +72,7 @@ function requestsByUser_ids($ts, $user){
 
 function requestById($id){
     $db = getDB();
-    $stmnt = $db->prepare('SELECT * from requests WHERE rowid = :id;');
-    $stmnt->bindValue(':id', $id);
-    $res = $stmnt->execute();
-    $stmnt->close();
+    $res = $db->query(sprintf('SELECT * from requests WHERE rowid = %s;', $id));
     return makeArraySingle($res);
 }
 
@@ -101,7 +92,7 @@ function makeArray($result){
 
 function makeArraySingle($result){
     // I think I can just...
-    return $result->fetchArray();
+    return($result->fetchArray(SQLITE3_ASSOC));
 }
 
 
@@ -136,7 +127,7 @@ function print_request_ids($array){
 function print_request_single($array){
     print '<ul>';
     foreach($array as $key => $val){
-        print sprintf('<li><span class="key">&s</span> &rarr; <span class="val">&s</span></li>', $key, $val);
+        print sprintf('<li><span class="key">%s</span> &rarr; <span class="val">%s</span></li>', $key, $val);
     }
     print '</ul>';
 }

@@ -5,6 +5,7 @@ include 'peregrine/Peregrine.php';
 $peregrine = new Peregrine;
 $peregrine->init();
 
+
 // DEBUG
 //$peregrine->post = $peregrine->get;
 

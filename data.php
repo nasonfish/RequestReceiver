@@ -5,25 +5,28 @@
     <?php include('Util.php'); ?>
 </head>
     <body>
-        <div class="users-box">
+        <div class="mods_box">
+            <h2>Mods</h2>
+            <?php print_mod_requests(requestsByMod_amt((date('Y-m-d H:i:s', time() - (2 * 7 * 24 * 60 * 60))))); ?>
+        </div>
+        <div class="users_box">
             <h2>Users</h2>
             <?php print_user_requests(requestsByUser_amt(date('Y-m-d H:i:s', time() - (2 * 7 * 24 * 60 * 60))));?>
-
         </div>
-    <body>
+    </body>
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
 
 <script>
-    $('.mod').click(function(){
+    $('.mods_box').on('click', '.mod', function(){
         handle($(this), 'mod');
     });
-    $('.user').click(function(){
+    $('.users_box').on('click', '.user', function(){
         handle($(this), 'user');
     });
 
     function handle(elem, type){
-        var name = elem.find('.user_name').text();
+        var name = elem.find('.'+type+'_name').text();
         $.ajax('data_ajax.php',
             {
                 type: 'POST',
@@ -35,13 +38,15 @@
                 dataType: 'html'
             }
         ).done(function(data){
-                elem.after(data);
+                elem.after(data).slideDown();
+                elem.removeClass();
             });
     }
 
-    $('.req_id').click(function(){
+    $('.users_box, .mods_box').on('click', '.req_id', function(){
+        var type = "id";
         var id = $(this).text();
-        alert(id);
+        var elem = $(this);
         $.ajax('data_ajax.php',
             {
                 type: 'POST',
@@ -53,7 +58,8 @@
                 dataType: 'html'
             }
         ).done(function(data){
-                $(this).after(data);
+                elem.after(data).slideDown();
+                elem.removeClass();
             });
     });
 </script>
