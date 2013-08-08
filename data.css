@@ -40,9 +40,15 @@ span.mod_name, span.user_name, span.id{
 
 body{
     background-color: #f2f2f2;
+    padding-bottom: 30px;
 }
 
 body div{
     padding-left: 30px;
     padding-top: 10px;
+}
+
+.faded{
+    color: #848484;
+    padding-bottom: 13px;
 }

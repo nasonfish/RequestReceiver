@@ -33,5 +33,8 @@ if (!isset($_SERVER['PHP_AUTH_USER'])) {
     </body>
 
 <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+<script>
+    var AJAX_PASS = '<?=file_get_contents('authpass.txt');?>';
+</script>
 <script src="data.js"></script>
 </html>
